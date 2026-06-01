@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coloring Book Generator | RLB Designs</title>
+  <meta name="description" content="Free AI coloring book page generator. Build a prompt and create printable coloring pages with free AI image tools."/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f9fafb; color: #111827; min-height: 100vh; }
+    button, textarea { font-family: inherit; }
+    #root { max-width: 680px; margin: 0 auto; padding: 32px 16px; }
+
+    h1 { font-size: 26px; font-weight: 700; color: #111827; margin-bottom: 8px; }
+    .subtitle { font-size: 14px; color: #6b7280; line-height: 1.6; max-width: 480px; margin: 0 auto 32px; }
+    .header { text-align: center; margin-bottom: 32px; }
+    .emoji { font-size: 40px; margin-bottom: 8px; }
+
+    .card { background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    label.section-label { font-size: 13px; font-weight: 600; color: #374151; display: block; margin-bottom: 8px; }
+
+    textarea {
+      width: 100%; padding: 10px 14px; border-radius: 10px;
+      border: 1px solid #d1d5db; font-size: 14px; outline: none;
+      resize: vertical; color: #111827; background: #f9fafb;
+    }
+    textarea:focus { border-color: #2563eb; background: #fff; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .chip { padding: 3px 10px; border-radius: 20px; border: 1px solid #e5e7eb; background: #f3f4f6; color: #6b7280; font-size: 11px; cursor: pointer; }
+    .chip:hover { background: #e5e7eb; }
+
+    .style-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .style-btn { padding: 10px 14px; border-radius: 10px; text-align: left; border: 1.5px solid #e5e7eb; background: #f9fafb; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+    .style-btn.active { border-color: #2563eb; background: #eff6ff; }
+    .style-btn .slabel { font-size: 13px; font-weight: 600; color: #111827; }
+    .style-btn.active .slabel { color: #2563eb; }
+    .style-btn .sdesc { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+
+    #build-btn {
+      width: 100%; padding: 13px 0; border-radius: 10px; border: none;
+      background: #2563eb; color: #fff; font-weight: 700; font-size: 15px;
+      cursor: pointer; margin-bottom: 24px; transition: background 0.15s;
+    }
+    #build-btn:disabled { background: #d1d5db; cursor: not-allowed; }
+    #build-btn:not(:disabled):hover { background: #1d4ed8; }
+
+    #result { display: none; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .prompt-box { padding: 20px; background: #f9fafb; border-bottom: 1px solid #e5e7eb; }
+    .prompt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .prompt-label { font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
+    #copy-btn { padding: 5px 14px; border-radius: 20px; border: 1px solid #d1d5db; background: #fff; color: #374151; font-size: 12px; cursor: pointer; font-weight: 600; transition: background 0.15s; }
+    #copy-btn.copied { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+    #prompt-text { font-size: 13px; color: #374151; line-height: 1.7; font-style: italic; }
+
+    .launchers-box { padding: 20px; }
+    .launchers-title { font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+    .launchers-hint { font-size: 12px; color: #9ca3af; margin-bottom: 12px; line-height: 1.5; }
+    .launcher-list { display: flex; flex-direction: column; gap: 8px; }
+    .launcher-link { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; border-radius: 10px; text-decoration: none; transition: opacity 0.15s; }
+    .launcher-link:hover { opacity: 0.85; }
+    .launcher-name { font-size: 14px; font-weight: 700; }
+    .launcher-sub { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+    .tip { font-size: 11px; color: #9ca3af; margin-top: 14px; line-height: 1.6; }
+    .tip a { color: #2563eb; }
+    footer { text-align: center; font-size: 11px; color: #d1d5db; margin-top: 32px; }
+    footer a { color: #9ca3af; }
+  </style>
+</head>
+<body>
+<div id="root">
+  <div class="header">
+    <div class="emoji">🎨</div>
+    <h1>Coloring Book Generator</h1>
+    <p class="subtitle">Describe a scene, pick a style, and get an AI-optimized prompt to use with <strong>free</strong> image generators — no account needed.</p>
+  </div>
+
+  <!-- Scene input -->
+  <div class="card">
+    <label class="section-label" for="subject-input">Describe your scene</label>
+    <textarea id="subject-input" rows="2" placeholder="e.g. dolphin jumping out of ocean near a butterfly"></textarea>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <!-- Style picker -->
+  <div class="card">
+    <label class="section-label">Coloring style</label>
+    <div class="style-grid" id="style-grid"></div>
+  </div>
+
+  <button id="build-btn" disabled>Build Prompt →</button>
+
+  <!-- Result -->
+  <div id="result">
+    <div class="prompt-box">
+      <div class="prompt-header">
+        <span class="prompt-label">Your Prompt</span>
+        <button id="copy-btn">📋 Copy</button>
+      </div>
+      <p id="prompt-text"></p>
+    </div>
+    <div class="launchers-box">
+      <div class="launchers-title">Open a free image generator</div>
+      <p class="launchers-hint">Copy your prompt above, then click a generator. Paste the prompt and create your coloring page!</p>
+      <div class="launcher-list" id="launcher-list"></div>
+      <p class="tip">
+        💡 <strong>Bing Image Creator</strong> is the easiest — no account required. Download and print!<br/>
+        Need help? Visit <a href="https://rlbdesigns.com" target="_blank" rel="noopener noreferrer">rlbdesigns.com</a> for step-by-step instructions.
+      </p>
+    </div>
+  </div>
+
+  <footer>Made with ❤️ by <a href="https://rlbdesigns.com" target="_blank" rel="noopener noreferrer">RLB Designs</a></footer>
+</div>
+
+<script>
+  const EXAMPLES = [
+    "dolphin jumping out of ocean near a butterfly",
+    "elephant spraying water in a jungle",
+    "unicorn galloping through a meadow of flowers",
+    "baby dragon hatching from an egg",
+    "lion resting under an acacia tree",
+    "owl perched on a branch at night with stars",
+  ];
+
+  const STYLES = [
+    { id:"classic",  label:"Classic",       desc:"Clean simple outlines, great for young kids" },
+    { id:"detailed", label:"Detailed",       desc:"Intricate lines, good for older kids & adults" },
+    { id:"mandala",  label:"Mandala-style",  desc:"Symmetrical, pattern-heavy, meditative" },
+    { id:"cartoon",  label:"Cartoon",        desc:"Fun, bold, exaggerated shapes" },
+  ];
+
+  const STYLE_MAP = {
+    classic:  "simple clean thick black outlines, minimal detail, easy to color",
+    detailed: "highly detailed black and white line art, intricate outlines, many details to color",
+    mandala:  "mandala style symmetrical patterns, decorative borders, zentangle elements",
+    cartoon:  "cartoon style, bold thick outlines, fun exaggerated proportions, comic book style",
+  };
+
+  const LAUNCHERS = [
+    { label:"Bing Image Creator",        sub:"Free · No account needed · DALL-E powered", color:"#0078d4", url:(p)=>`https://www.bing.com/images/create?q=${encodeURIComponent(p)}` },
+    { label:"Adobe Firefly",             sub:"Free tier · High quality results",           color:"#e34850", url:(p)=>`https://firefly.adobe.com/generate/images?prompt=${encodeURIComponent(p)}` },
+    { label:"Ideogram",                  sub:"Free tier · Excellent line art",             color:"#7c3aed", url:(p)=>`https://ideogram.ai/?q=${encodeURIComponent(p)}` },
+    { label:"Google AI Studio (Imagen)", sub:"Free · Google · Imagen 3 model",            color:"#1a73e8", url:()=>`https://aistudio.google.com/generate-image` },
+  ];
+
+  let selectedStyle = "classic";
+  let currentPrompt = "";
+
+  // Build example chips
+  const chipsEl = document.getElementById("chips");
+  EXAMPLES.forEach(ex => {
+    const btn = document.createElement("button");
+    btn.className = "chip";
+    btn.textContent = ex;
+    btn.onclick = () => { input.value = ex; syncBtn(); };
+    chipsEl.appendChild(btn);
+  });
+
+  // Build style grid
+  const styleGrid = document.getElementById("style-grid");
+  STYLES.forEach(s => {
+    const btn = document.createElement("button");
+    btn.className = "style-btn" + (s.id === selectedStyle ? " active" : "");
+    btn.innerHTML = `<div class="slabel">${s.label}</div><div class="sdesc">${s.desc}</div>`;
+    btn.onclick = () => {
+      selectedStyle = s.id;
+      styleGrid.querySelectorAll(".style-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    };
+    styleGrid.appendChild(btn);
+  });
+
+  // Build launcher list
+  const launcherList = document.getElementById("launcher-list");
+  LAUNCHERS.forEach(l => {
+    const a = document.createElement("a");
+    a.className = "launcher-link";
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.style.cssText = `border: 1.5px solid ${l.color}33; background: ${l.color}0d;`;
+    a.innerHTML = `<div><div class="launcher-name" style="color:${l.color}">${l.label} ↗</div><div class="launcher-sub">${l.sub}</div></div>`;
+    // href set dynamically at click time so it uses the latest prompt
+    a.addEventListener("click", e => { a.href = l.url(currentPrompt); });
+    launcherList.appendChild(a);
+  });
+
+  // Input + button wiring
+  const input = document.getElementById("subject-input");
+  const buildBtn = document.getElementById("build-btn");
+  const result = document.getElementById("result");
+  const promptText = document.getElementById("prompt-text");
+  const copyBtn = document.getElementById("copy-btn");
+
+  const syncBtn = () => { buildBtn.disabled = !input.value.trim(); };
+  input.addEventListener("input", syncBtn);
+  input.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (!buildBtn.disabled) buildBtn.click(); } });
+
+  buildBtn.onclick = () => {
+    const q = input.value.trim();
+    if (!q) return;
+    currentPrompt = `children's coloring book page of ${q}, ${STYLE_MAP[selectedStyle]}, pure white background, black outlines only, no color no shading no gray tones no gradients, printable coloring book illustration, professional line art`;
+    promptText.textContent = `"${currentPrompt}"`;
+    result.style.display = "block";
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  copyBtn.onclick = () => {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = currentPrompt;
+      ta.style.cssText = "position:fixed;top:0;left:0;opacity:0;";
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      copyBtn.textContent = "✓ Copied!";
+      copyBtn.classList.add("copied");
+      setTimeout(() => { copyBtn.textContent = "📋 Copy"; copyBtn.classList.remove("copied"); }, 2500);
+    } catch(e) {}
+  };
+</script>
+</body>
+</html>
