@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Coloring Book Generator | RLB Designs</title>
-  <meta name="description" content="Free AI coloring book page generator. Build a prompt and create printable coloring pages with free AI image tools."/>
+  <title>Coloring Page Generator | RLB Designs</title>
+  <meta name="description" content="Free AI coloring page generator. Build a prompt and create printable coloring pages with free AI image tools."/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -22,10 +22,7 @@
     }
 
     /* Header */
-    .header {
-      text-align: center;
-      margin-bottom: 36px;
-    }
+    .header { text-align: center; margin-bottom: 36px; }
     .header-badge {
       display: inline-block;
       background: #c9a882;
@@ -38,20 +35,8 @@
       border-radius: 20px;
       margin-bottom: 14px;
     }
-    h1 {
-      font-size: 30px;
-      font-weight: 800;
-      color: #3d3530;
-      margin-bottom: 10px;
-      letter-spacing: -0.5px;
-    }
-    .subtitle {
-      font-size: 14px;
-      color: #7d6e63;
-      line-height: 1.7;
-      max-width: 460px;
-      margin: 0 auto;
-    }
+    h1 { font-size: 30px; font-weight: 800; color: #3d3530; margin-bottom: 10px; letter-spacing: -0.5px; }
+    .subtitle { font-size: 14px; color: #7d6e63; line-height: 1.7; max-width: 460px; margin: 0 auto; }
 
     /* Cards */
     .card {
@@ -133,7 +118,7 @@
       border: 1.5px solid #ddd3c7;
       border-radius: 14px;
       box-shadow: 0 8px 24px rgba(61,53,48,0.12);
-      z-index: 100;
+      z-index: 999;
       overflow: hidden;
       max-height: 300px;
       overflow-y: auto;
@@ -153,7 +138,7 @@
     .ms-option:last-child { border-bottom: none; }
     .ms-option:hover { background: #faf6f2; }
     .ms-option.selected { background: #fdf6ee; }
-    .ms-option.disabled { opacity: 0.4; cursor: not-allowed; }
+    .ms-option.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
     .ms-checkbox {
       width: 18px; height: 18px;
       border-radius: 5px;
@@ -164,22 +149,9 @@
       font-size: 11px;
       color: #fff;
     }
-    .ms-option.selected .ms-checkbox {
-      background: #c9a882;
-      border-color: #c9a882;
-    }
-    .ms-hint {
-      font-size: 11px;
-      color: #b5a99f;
-      margin-top: 8px;
-    }
-    .ms-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 10px;
-      min-height: 0;
-    }
+    .ms-option.selected .ms-checkbox { background: #c9a882; border-color: #c9a882; }
+    .ms-hint { font-size: 11px; color: #b5a99f; margin-top: 8px; }
+    .ms-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
     .ms-tag {
       display: flex;
       align-items: center;
@@ -191,12 +163,7 @@
       font-size: 12px;
       color: #7d6e63;
     }
-    .ms-tag-remove {
-      cursor: pointer;
-      font-size: 13px;
-      color: #b5a99f;
-      line-height: 1;
-    }
+    .ms-tag-remove { cursor: pointer; font-size: 13px; color: #b5a99f; line-height: 1; }
     .ms-tag-remove:hover { color: #c9a882; }
 
     /* Style grid */
@@ -209,6 +176,7 @@
       background: rgba(255,255,255,0.6);
       cursor: pointer;
       transition: all 0.15s;
+      font-family: inherit;
     }
     .style-btn:hover { background: rgba(255,255,255,0.9); border-color: #c9a882; }
     .style-btn.active { border-color: #c9a882; background: #fdf6ee; box-shadow: 0 0 0 3px rgba(201,168,130,0.15); }
@@ -240,31 +208,20 @@
     /* Result */
     #result {
       display: none;
-      background: rgba(255,255,255,0.8);
-      backdrop-filter: blur(8px);
+      background: rgba(255,255,255,0.92);
       border-radius: 18px;
       border: 1px solid rgba(201,168,130,0.3);
       overflow: hidden;
       box-shadow: 0 4px 20px rgba(61,53,48,0.1);
+      margin-bottom: 24px;
     }
     .prompt-box {
       padding: 22px 24px;
       background: linear-gradient(135deg, #fdf8f3, #f8f2ea);
       border-bottom: 1px solid rgba(201,168,130,0.2);
     }
-    .prompt-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .prompt-label {
-      font-size: 11px;
-      font-weight: 800;
-      color: #c9a882;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
+    .prompt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .prompt-label { font-size: 11px; font-weight: 800; color: #c9a882; text-transform: uppercase; letter-spacing: 0.1em; }
     #copy-btn {
       padding: 6px 16px;
       border-radius: 20px;
@@ -282,14 +239,7 @@
     #prompt-text { font-size: 13.5px; color: #5a4e47; line-height: 1.8; font-style: italic; }
 
     .launchers-box { padding: 22px 24px; }
-    .launchers-title {
-      font-size: 11px;
-      font-weight: 800;
-      color: #c9a882;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 6px;
-    }
+    .launchers-title { font-size: 11px; font-weight: 800; color: #c9a882; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
     .launchers-hint { font-size: 12.5px; color: #7d6e63; margin-bottom: 14px; line-height: 1.6; }
     .launcher-list { display: flex; flex-direction: column; gap: 8px; }
     .launcher-link {
@@ -308,12 +258,25 @@
     .tip a { color: #c9a882; text-decoration: none; font-weight: 600; }
     .tip a:hover { text-decoration: underline; }
 
-    footer {
-      text-align: center;
-      font-size: 12px;
-      color: #b5a99f;
-      margin-top: 36px;
+    /* Upsell block */
+    .upsell {
+      background: rgba(255,255,255,0.6);
+      border-radius: 18px;
+      border: 1px solid rgba(201,168,130,0.3);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(61,53,48,0.07);
+      font-size: 13.5px;
+      color: #5a4e47;
+      line-height: 1.9;
     }
+    .upsell-title { font-size: 11px; font-weight: 800; color: #c9a882; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; }
+    .upsell p { margin-bottom: 12px; }
+    .upsell p:last-child { margin-bottom: 0; }
+    .upsell a { color: #a07840; font-weight: 600; text-decoration: none; }
+    .upsell a:hover { text-decoration: underline; }
+
+    footer { text-align: center; font-size: 12px; color: #b5a99f; margin-top: 8px; }
     footer a { color: #c9a882; text-decoration: none; font-weight: 600; }
   </style>
 </head>
@@ -384,19 +347,20 @@
     </div>
   </div>
 
-  <div style="background:rgba(255,255,255,0.6);border-radius:18px;border:1px solid rgba(201,168,130,0.3);padding:24px;margin-bottom:24px;box-shadow:0 2px 12px rgba(61,53,48,0.07);font-size:13.5px;color:#5a4e47;line-height:1.9;">
-    <div style="font-size:11px;font-weight:800;color:#c9a882;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;">🚀 Ready to Go Further?</div>
-    <p style="margin-bottom:12px;">
+  <!-- Upsell -->
+  <div class="upsell">
+    <div class="upsell-title">🚀 Ready to Go Further?</div>
+    <p>
       <strong>Advanced <em>FREE</em> Page &amp; Book Generator</strong> for the experienced AI user:<br/>
-      <a href="https://prompts.rlbdesigns.com/" target="_blank" rel="noopener noreferrer" style="color:#a07840;font-weight:600;text-decoration:none;">prompts.rlbdesigns.com ↗</a>
+      <a href="https://prompts.rlbdesigns.com/" target="_blank" rel="noopener noreferrer">prompts.rlbdesigns.com ↗</a>
     </p>
-    <p style="margin-bottom:12px;">
+    <p>
       <strong>Newbie–Intermediate Coloring Book Author App</strong> — Free with purchase of the Canva Template <em>Planner Launchpad</em>:<br/>
-      <a href="https://www.rlbdesigns.com/digital-downloads/create-your-own/coloring-book-launchpadplanner" target="_blank" rel="noopener noreferrer" style="color:#a07840;font-weight:600;text-decoration:none;">Coloring Book Launchpad Planner ↗</a>
+      <a href="https://www.rlbdesigns.com/digital-downloads/create-your-own/coloring-book-launchpadplanner" target="_blank" rel="noopener noreferrer">Coloring Book Launchpad Planner ↗</a>
     </p>
     <p>
       <strong>Professional Coloring Book System for Authors</strong> — <em>Coloring Book Studio Pro</em> (1-week trial or 1-year access key):<br/>
-      <a href="https://www.rlbdesigns.com/digital-downloads/create-your-own/coloring-book-studio-pro" target="_blank" rel="noopener noreferrer" style="color:#a07840;font-weight:600;text-decoration:none;">Coloring Book Studio Pro ↗</a>
+      <a href="https://www.rlbdesigns.com/digital-downloads/create-your-own/coloring-book-studio-pro" target="_blank" rel="noopener noreferrer">Coloring Book Studio Pro ↗</a>
     </p>
   </div>
 
@@ -404,8 +368,6 @@
 </div>
 
 <script>
-  // ── Data ──────────────────────────────────────────────────────────────────
-
   const SCENE_IDEAS = [
     "dolphin jumping out of ocean near a butterfly",
     "elephant spraying water in a jungle",
@@ -464,7 +426,6 @@
   ];
 
   // ── Multi-select factory ──────────────────────────────────────────────────
-
   function makeMultiSelect({ items, triggerId, arrowId, dropdownId, tagsId, textId, max, onInput }) {
     const selected = [];
     const trigger  = document.getElementById(triggerId);
@@ -473,7 +434,6 @@
     const tagsEl   = document.getElementById(tagsId);
     const textEl   = document.getElementById(textId);
 
-    // Build options
     items.forEach((item, i) => {
       const opt = document.createElement("div");
       opt.className = "ms-option";
@@ -495,7 +455,6 @@
         opt.classList.add("selected");
         opt.querySelector(".ms-checkbox").textContent = "✓";
       }
-      // Disable unselected if at max
       dropdown.querySelectorAll(".ms-option").forEach(o => {
         const sel = o.classList.contains("selected");
         o.classList.toggle("disabled", !sel && selected.length >= max);
@@ -524,14 +483,12 @@
       textEl.classList.toggle("has-value", selected.length > 0);
     }
 
-    // Toggle open/close
     trigger.addEventListener("click", () => {
       const open = dropdown.classList.toggle("open");
       arrow.classList.toggle("open", open);
       trigger.classList.toggle("open", open);
     });
 
-    // Close on outside click
     document.addEventListener("click", e => {
       if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
         dropdown.classList.remove("open");
@@ -543,16 +500,14 @@
     return { getSelected: () => [...selected] };
   }
 
-  // ── Init multi-selects ────────────────────────────────────────────────────
-
-  // ── Sync build button state ───────────────────────────────────────────────
-  // Defined here so it's available to both multi-selects and the input listener
+  // ── Sync build button ─────────────────────────────────────────────────────
   function syncBtn() {
     const hasText  = document.getElementById("subject-input").value.trim().length > 0;
     const hasPicks = sceneMs ? sceneMs.getSelected().length > 0 : false;
     document.getElementById("build-btn").disabled = !hasText && !hasPicks;
   }
 
+  // ── Init multi-selects ────────────────────────────────────────────────────
   const sceneMs = makeMultiSelect({
     items: SCENE_IDEAS, triggerId:"scene-trigger", arrowId:"scene-arrow",
     dropdownId:"scene-dropdown", tagsId:"scene-tags", textId:"scene-trigger-text",
@@ -566,7 +521,6 @@
   });
 
   // ── Style grid ────────────────────────────────────────────────────────────
-
   let selectedStyle = "classic";
   const styleGrid = document.getElementById("style-grid");
   STYLES.forEach(s => {
@@ -583,7 +537,6 @@
   });
 
   // ── Launchers ─────────────────────────────────────────────────────────────
-
   let currentPrompt = "";
   const launcherList = document.getElementById("launcher-list");
   LAUNCHERS.forEach(l => {
@@ -597,19 +550,19 @@
     launcherList.appendChild(a);
   });
 
-  // ── Build button ──────────────────────────────────────────────────────────
-
-  const input       = document.getElementById("subject-input");
-  const buildBtn    = document.getElementById("build-btn");
-  const result      = document.getElementById("result");
-  const promptText  = document.getElementById("prompt-text");
-  const copyBtn     = document.getElementById("copy-btn");
+  // ── Input wiring ──────────────────────────────────────────────────────────
+  const input      = document.getElementById("subject-input");
+  const buildBtn   = document.getElementById("build-btn");
+  const result     = document.getElementById("result");
+  const promptText = document.getElementById("prompt-text");
+  const copyBtn    = document.getElementById("copy-btn");
 
   input.addEventListener("input", syncBtn);
   input.addEventListener("keydown", e => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (!buildBtn.disabled) buildBtn.click(); }
   });
 
+  // ── Build prompt ──────────────────────────────────────────────────────────
   buildBtn.onclick = () => {
     const typedScene  = input.value.trim();
     const pickedScene = sceneMs.getSelected();
@@ -618,7 +571,6 @@
 
     const sceneParts = [...(typedScene ? [typedScene] : []), ...pickedScene];
     const scene = sceneParts.join(", combined with ");
-
     const extraParts = [...(typedStyle ? [typedStyle] : []), ...pickedStyle];
     const extra = extraParts.join(", ");
 
@@ -630,7 +582,6 @@
   };
 
   // ── Copy ──────────────────────────────────────────────────────────────────
-
   copyBtn.onclick = () => {
     try {
       const ta = document.createElement("textarea");
