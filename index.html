@@ -291,7 +291,10 @@
 
   <!-- Scene input -->
   <div class="card">
-    <div class="card-title">Describe your scene</div>
+    <div class="card-title" style="justify-content:space-between;">
+      <span>Describe your scene</span>
+      <button id="clear-scene-btn" type="button" onclick="clearScene()" style="font-size:11px;font-weight:700;color:#b5a99f;background:none;border:1.5px solid #e0d4c8;cursor:pointer;padding:3px 10px;border-radius:20px;font-family:inherit;letter-spacing:0.03em;transition:color 0.15s,border-color 0.15s;" onmouseover="this.style.color='#a07840';this.style.borderColor='#c9a882'" onmouseout="this.style.color='#b5a99f';this.style.borderColor='#e0d4c8'">✕ Clear Scene</button>
+    </div>
     <textarea id="subject-input" rows="2" placeholder="Type your own scene, or choose up to 3 ideas below to combine…"></textarea>
     <div class="multi-select" id="scene-ms" style="margin-top:12px;">
       <button class="ms-trigger" id="scene-trigger" type="button">
@@ -356,11 +359,11 @@
     </p>
     <p>
       <strong>Newbie–Intermediate Coloring Book Author App</strong> — Free with purchase of the Canva Template <em>Planner Launchpad</em>:<br/>
-      <a href="https://www.rlbdesigns.com/digital-downloads/create-your-own/coloring-book-launchpadplanner" target="_blank" rel="noopener noreferrer">Coloring Book Launchpad Planner ↗</a>
+      <a href="https://cblaunchpad.rlbdesigns.com/" target="_blank" rel="noopener noreferrer">Coloring Book Launchpad Planner ↗</a>
     </p>
     <p>
       <strong>Professional Coloring Book System for Authors</strong> — <em>Coloring Book Studio Pro</em> (1-week trial or 1-year access key):<br/>
-      <a href="https://www.rlbdesigns.com/digital-downloads/create-your-own/coloring-book-studio-pro" target="_blank" rel="noopener noreferrer">Coloring Book Studio Pro ↗</a>
+      <a href="https://colorstudio.rlbdesigns.com/" target="_blank" rel="noopener noreferrer">Coloring Book Studio Pro ↗</a>
     </p>
   </div>
 
@@ -497,7 +500,20 @@
       }
     });
 
-    return { getSelected: () => [...selected] };
+    return { getSelected: () => [...selected], _reset: () => { selected.length = 0; renderTags(); updateTriggerText(); } };
+  }
+
+  // ── Clear scene ───────────────────────────────────────────────────────────
+  function clearScene() {
+    document.getElementById("subject-input").value = "";
+    // Re-enable any disabled options
+    document.getElementById("scene-dropdown").querySelectorAll(".ms-option").forEach(o => {
+      o.classList.remove("selected", "disabled");
+      o.querySelector(".ms-checkbox").textContent = "";
+    });
+    // Reset internal selected array + tags + trigger text
+    if (sceneMs && sceneMs._reset) sceneMs._reset();
+    syncBtn();
   }
 
   // ── Sync build button ─────────────────────────────────────────────────────
